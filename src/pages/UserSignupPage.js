@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import axios from 'axios';
+import {signup} from './api/apiCalls';
 
 class UserSignupPage extends Component {
 
@@ -11,12 +11,6 @@ class UserSignupPage extends Component {
         passwordRepeat: null,
         pendingApiCall:false
     };
-
-    /* onChangeUserName = event => {
-        this.setState({
-            username: event.target.value
-        });
-    } */
 
     onChange = event => {
         /* const value = event.target.value;
@@ -30,7 +24,7 @@ class UserSignupPage extends Component {
         })
     }
 
-    onClickSignup = event => {
+    onClickSignup = async event => {
         event.preventDefault();
 
         const { username, displayName, password } = this.state;
@@ -41,17 +35,16 @@ class UserSignupPage extends Component {
         };
         this.setState({pendingApiCall:true});
 
-        axios.post('/api/1.0/users', body)
-        .then((response)=>{
-            this.setState({pendingApiCall:false})
-        })
-        .catch(error=>{
-            this.setState({pendingApiCall:false})
-          });
-        
-    };
+        try{
+            const response = await signup(body);
+        } catch(error) {
+
+        }
+       this.setState({pendingApiCall:false});
+    }; 
 
     render() {
+        const {pendingApiCall} = this.state;
         return (
             <div className="container">
                 <form>
@@ -73,11 +66,9 @@ class UserSignupPage extends Component {
                         <input className="form-control" name="passwordRepeat" onChange={this.onChange} type="password" />
                     </div>
                     <div className="text-center">
-                    <button className="btn btn-primary"  onClick={this.onClickSignup} disabled={this.state.pendingApiCall}>
-                    {this.state.pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}Sign Up</button>
+                    <button className="btn btn-primary"  onClick={this.onClickSignup} disabled={pendingApiCall}>
+                    {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}Sign Up</button>
                     </div>
-
-
                 </form>
             </div>
 
