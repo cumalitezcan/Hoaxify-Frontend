@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import {signup} from './api/apiCalls';
+import { signup } from './api/apiCalls';
 
 class UserSignupPage extends Component {
 
@@ -9,7 +9,8 @@ class UserSignupPage extends Component {
         displayName: null,
         password: null,
         passwordRepeat: null,
-        pendingApiCall:false
+        pendingApiCall: false,
+        errors: {}
     };
 
     onChange = event => {
@@ -18,10 +19,12 @@ class UserSignupPage extends Component {
 
         //object destructuring
         const { name, value } = event.target;
+        const errors = {...this.state.errors};
+        errors[name]=undefined
 
         this.setState({
-            [name]: value
-        })
+            [name]: value,errors
+        });
     }
 
     onClickSignup = async event => {
@@ -33,26 +36,32 @@ class UserSignupPage extends Component {
             displayName,
             password
         };
-        this.setState({pendingApiCall:true});
+        this.setState({ pendingApiCall: true });
 
-        try{
+        try {
             const response = await signup(body);
-        } catch(error) {
-
-        }
-       this.setState({pendingApiCall:false});
-    }; 
+        } catch (error) {
+            if(error.response.data.validationErrors){
+                this.setState({ errors: error.response.data.validationErrors })
+            }
+            }
+            
+        this.setState({ pendingApiCall: false });
+    };
 
     render() {
-        const {pendingApiCall} = this.state;
-        return (
+        const { pendingApiCall,errors } = this.state;
+         const {username} = errors;
+         return (
             <div className="container">
                 <form>
                     <h1 className="text-center">Sign Up</h1>
                     <div className="form-group">
                         <label>Username</label>
-                        <input className="form-control" name="username" onChange={this.onChange} />
-                    </div>
+                        {<input className={username ? 'form-control is-invalid' : 'form-control'} name="username" onChange={this.onChange} />}
+
+                        {<div className="invalid-feedback">{username}</div>
+                        }                    </div>
                     <div className="form-group">
                         <label>Display Name</label>
                         <input className="form-control" name="displayName" onChange={this.onChange} />
@@ -66,8 +75,8 @@ class UserSignupPage extends Component {
                         <input className="form-control" name="passwordRepeat" onChange={this.onChange} type="password" />
                     </div>
                     <div className="text-center">
-                    <button className="btn btn-primary"  onClick={this.onClickSignup} disabled={pendingApiCall}>
-                    {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}Sign Up</button>
+                        <button className="btn btn-primary" onClick={this.onClickSignup} disabled={pendingApiCall}>
+                            {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}Sign Up</button>
                     </div>
                 </form>
             </div>
