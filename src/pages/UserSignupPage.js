@@ -21,7 +21,17 @@ class UserSignupPage extends Component {
         //object destructuring
         const { name, value } = event.target;
         const errors = {...this.state.errors};
-        errors[name]=undefined
+        errors[name]=undefined;
+
+        if (name === 'password' || name === 'passwordRepeat') {
+            if (name === 'password' && value !== this.state.passwordRepeat) {
+              errors.passwordRepeat = 'Password mismatch';
+            } else if (name === 'passwordRepeat' && value !== this.state.password) {
+              errors.passwordRepeat = 'Password mismatch';
+            } else {
+              errors.passwordRepeat = undefined;
+            }
+          }
 
         this.setState({
             [name]: value,errors
@@ -52,13 +62,15 @@ class UserSignupPage extends Component {
 
     render() {
         const { pendingApiCall,errors } = this.state;
-         const {username,displayName} = errors;
+         const {username,displayName,password,passwordRepeat} = errors;
          return (
             <div className="container">
                 <form>
                     <h1 className="text-center">Sign Up</h1>
                     <Input name="username" label="Username" error={username} onChange={this.onChange} />
                     <Input name="displayName" label="DisplayName" error={displayName} onChange={this.onChange} />
+                    <Input name="password" label="Password" error={password} onChange={this.onChange} type="password" />
+                    <Input name="passwordRepeat" label="PasswordRepeat" error={passwordRepeat} onChange={this.onChange} type="password" />
                    {/*  <div className="form-group">
                         <label>Username</label>
                         {<input className={username ? 'form-control is-invalid' : 'form-control'} name="username" onChange={this.onChange} />}
@@ -70,16 +82,16 @@ class UserSignupPage extends Component {
                         {<input className={displayName ? 'form-control is-invalid' : 'form-control'} name="displayName" onChange={this.onChange} />}
                         {<div className="invalid-feedback">{displayName}</div>}
                     </div> */}
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label>Password</label>
                         <input className="form-control" name="password" onChange={this.onChange} type="password" />
-                    </div>
-                    <div className="form-group">
+                    </div> */}
+                   {/*  <div className="form-group">
                         <label>Password Repeat</label>
                         <input className="form-control" name="passwordRepeat" onChange={this.onChange} type="password" />
-                    </div>
+                    </div> */}
                     <div className="text-center">
-                        <button className="btn btn-primary" onClick={this.onClickSignup} disabled={pendingApiCall}>
+                        <button className="btn btn-primary" onClick={this.onClickSignup} disabled={pendingApiCall || passwordRepeat!== undefined}>
                             {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}Sign Up</button>
                     </div>
                 </form>
