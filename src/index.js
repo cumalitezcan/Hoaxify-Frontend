@@ -6,10 +6,11 @@ import UserSignupPage from '../src/pages/UserSignupPage';
 import reportWebVitals from './reportWebVitals';
 import './bootstrap-override.scss';
 import './i18n';
+import LoginPage from './pages/LoginPage';
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserSignupPage />
+    <LoginPage />
   </React.StrictMode>,
   document.getElementById('root')
 );
