@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
-import { changeLanguage } from '../pages/api/apiCalls';
+import { changeLanguage } from '../api/apiCalls';
 
 
 const LanguageSelector = (props) => {

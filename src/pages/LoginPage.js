@@ -1,33 +1,36 @@
 import React, { Component } from 'react';
 import Input from '../components/Input';
 import {withTranslation} from 'react-i18next';
-import {login} from '../pages/api/apiCalls';
+import {login} from '../api/apiCalls';
 
  class LoginPage extends Component {
+     
      state = {
+         
          username:null,
-         password:null,
+         password:null
 
-     }
+     };
 
      onChange = event => {
          const {name,value} = event.target;
          this.setState({
              [name]:value
-         })
-     }
+         });
+     };
 
      onClickLogin = event => {
          event.preventDefault();
-         const {username,password} = this.props;
+         const {username,password} = this.state;
          const creds = {
-             username: username,
-             password: password
-         }
+             username,
+             password
+         };
          login(creds)
-     }
+     };
 
     render() {
+        console.log("burası"+this.state.username);
         const {t} =this.props;
         return (
             <div className="container">
@@ -41,7 +44,7 @@ import {login} from '../pages/api/apiCalls';
             </form>
                 
             </div>
-        )
+        );
     }
 }
 export default withTranslation()(LoginPage);

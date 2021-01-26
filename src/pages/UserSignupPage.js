@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { signup } from './api/apiCalls';
+import { signup } from '../api/apiCalls';
 import Input from '../components/Input';
 import {withTranslation} from 'react-i18next';
 
